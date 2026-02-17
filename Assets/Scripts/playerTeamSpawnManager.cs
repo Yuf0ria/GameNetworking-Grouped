@@ -5,6 +5,7 @@
  * - Get their prefab using Network Object
  * - Check if the Session works before the player is spawned
  *
+ * (Imported from an previous Network Project)
  * if you have any questions leave a comment or ping me on discord
  * --dani
  */
@@ -51,47 +52,48 @@ public class PlayerTeamSpawnManager : MonoBehaviour
          * -- dani, Feb 17
          */
         //IMPORTANT NULL CHECKS
-        if (button != null)
-        {
-            button.interactable = false;
-            button.onClick.AddListener(OnButtonClick); 
-        }else Debug.LogError("No button assigned!");
-            
-        if (materialDropdown != null)
-        {
-            GetMaterialsForDropdown();
-        }
-        else Debug.LogError("Dropdown is empty, check inspector");
+        #region Null Checks
+            if (button != null)
+            {
+                button.interactable = false;
+                button.onClick.AddListener(OnButtonClick); 
+            }else Debug.LogError("No button assigned!");
+                
+            if (materialDropdown != null)
+            {
+                MaterialsInDropdown();
+            }
+            else Debug.LogError("Dropdown is empty, check inspector");
 
-        if (playerNameInputField == null)
-            Debug.LogError("Input field is empty, check inspector");
-            
-        if (NetworkSessionManager.Instance != null)
-        {
-            if (NetworkSessionManager.Instance.IsSessionReady)
-                SessionOK();
-            else NetworkSessionManager.Instance.OnSessionStarted += SessionOK;
-        }
-        else Debug.LogError("NetworkSessionManager.cs not found"); //Don't delete this script 💀
+            if (playerNameInputField == null)
+                Debug.LogError("Input field is empty, check inspector");
+                
+            if (NetworkSessionManager.Instance != null)
+            {
+                if (NetworkSessionManager.Instance.IsSessionReady)
+                    SessionOK();
+                else NetworkSessionManager.Instance.OnSessionStarted += SessionOK;
+            }
+            else Debug.LogError("NetworkSessionManager.cs not found"); //Don't delete this script 💀
+        #endregion
     }
-
-    // Fills the dropdown with each material's name.
-    // If no materials are assigned, the dropdown is left empty and a warning is logged.
-    private void GetMaterialsForDropdown()
+    
+    private void MaterialsInDropdown()
     {
         materialDropdown.ClearOptions();
-        if (materials == null || materials.Length == 0)
-        {
-            Debug.LogWarning("No mats here. Add your Materials to the dropdown list!");
-            return;
-        }
-
+        #region NULLCHECKS (MATERIALS)
+            if (materials == null || materials.Length == 0)
+            {
+                Debug.LogWarning("No mats here. Add your Materials to the dropdown list!");
+                return;
+            }
+        #endregion
+        
         var options = new System.Collections.Generic.List<string>();
         foreach (Material mat in materials)
             options.Add(mat != null ? mat.name : "--Empty--");
 
         materialDropdown.AddOptions(options);
-        Debug.Log($"Materials at the dropdown{options.Count}");
     }
 
     private void SessionOK()
@@ -100,11 +102,11 @@ public class PlayerTeamSpawnManager : MonoBehaviour
     }
     private void OnButtonClick()
     {
-        var position = GetRandomSpawnPosition();
+        var position = RandomSpawnPosition();
         SpawnPlayer(position);
     }
 
-    private Vector3 GetRandomSpawnPosition()
+    private Vector3 RandomSpawnPosition()
     {
         Vector2 randomCircle = Random.insideUnitCircle * spawnRadius;
         return new Vector3(
@@ -153,18 +155,10 @@ public class PlayerTeamSpawnManager : MonoBehaviour
                 Debug.LogError("no prefab");
                 return;
             }
-
-            Debug.Log($"SPAWN PLAYER AT RANDOM");
-            //debug info comment once working
-            Debug.Log($"   Name: {playerName}");
-            Debug.Log($"   Material Index: {selectedMatIndex}");
-            Debug.Log($"   Position: {spawnPosition}");
-            Debug.Log($"   Local Player ID: {runner.LocalPlayer}");
         #endregion
         
-        try //ayoko na mag try, hmph
+        try
         {
-            //takbo pls
             NetworkObject player = runner.Spawn(
                 playerPrefab,
                 spawnPosition,
@@ -172,12 +166,14 @@ public class PlayerTeamSpawnManager : MonoBehaviour
                 runner.LocalPlayer
             );
 
-            if (player == null)
-            {
-                Debug.LogError("NO SPAWN?!?!");
-                return;
-            }
-
+            #region NULLCHECKS (PLAYER)
+                if (player == null)
+                {
+                    Debug.LogError("NO SPAWN?!?!");
+                    return;
+                }
+            #endregion
+            
             //CUSTOMIZATION SETUP -- PLAYER CUSTOMIZATION SCRIPT
             PlayerCustomization customization = player.GetComponent<PlayerCustomization>();
             if (customization != null)
@@ -189,8 +185,6 @@ public class PlayerTeamSpawnManager : MonoBehaviour
             {
                 Debug.LogWarning("Spawned player has no PlayerCustomization component – skipping customization.");
             }
-
-            Debug.Log("PLAYER IS HERE YIPPEEE");
             
             //SWITCH
             hasSpawned = true;

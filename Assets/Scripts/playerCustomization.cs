@@ -6,8 +6,6 @@
 using Fusion;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
 
 public class PlayerCustomization : NetworkBehaviour
 {
@@ -48,6 +46,6 @@ public class PlayerCustomization : NetworkBehaviour
             Debug.Log("MaterialsHere");
             _playerRenderer.material = materials[_matIndex];
             _lastMaterialIndex = _matIndex;
-        } else Debug.LogWarning("No materials found");
+        }
     }
 }

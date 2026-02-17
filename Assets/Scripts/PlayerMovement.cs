@@ -10,6 +10,7 @@ public class PlayerMovement : NetworkBehaviour
     private Vector3 _velocity;
     private const float Sensitivity = 1;
     private const float Gravity = 9.81f;
+    private const float JumpForce = 5f;
 
     [Header("Components Needed")]
     [SerializeField] private Transform playerCamera;
@@ -66,7 +67,8 @@ public class PlayerMovement : NetworkBehaviour
     {
         if (GetInput(out NetworkInputData input))
         {
-            Debug.Log($"Input received: move={input.movementInput}, sprint={input.isSprinting}"); // remove once confirmed
+            //uncomment if player is not moving
+            // Debug.Log($"Input received: move={input.movementInput}, sprint={input.isSprinting}"); // remove once confirmed
             MovePlayer(input);
             RotatePlayer(input);
             RotateCamera(input);
@@ -115,11 +117,6 @@ public class PlayerMovement : NetworkBehaviour
     private void IsGrounded()
     {
         if (!HasInputAuthority) return;
-
-        if (controller.isGrounded)
-            _velocity.y = -2f;
-        else
-            _velocity.y -= Gravity * 2f * Runner.DeltaTime;
     }
 
     private void MovePlayer(NetworkInputData input)
@@ -129,8 +126,16 @@ public class PlayerMovement : NetworkBehaviour
 
         _speed = input.isSprinting ? 9f : 3f;
 
-        // Apply gravity here too, in one single Move call
-        _velocity.y = controller.isGrounded ? -2f : _velocity.y - (Gravity * 2f * Runner.DeltaTime);
+        if (controller.isGrounded)
+        {
+            _velocity.y = -2f;
+            if (input.isJumping)
+                _velocity.y = JumpForce;
+        }
+        else
+        {
+            _velocity.y -= Gravity * 2f * Runner.DeltaTime;
+        }
 
         Vector3 finalMove = (moveDirection * _speed) + new Vector3(0, _velocity.y, 0);
         controller.Move(finalMove * Runner.DeltaTime);
