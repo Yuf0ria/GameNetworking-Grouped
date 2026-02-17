@@ -26,25 +26,24 @@ public class PlayerCustomization : NetworkBehaviour
     
     //instantiate player info
     public void InsPlayerInfo(string name, int matIndex)
+{
+    if (!HasStateAuthority)
     {
-        if (HasStateAuthority)
-        {
-            _playerName = name;
-            _matIndex = matIndex;
-            return;
-        }
-        Debug.Log("return works");
+        Debug.LogWarning("No state authority, can't set player info");
+        return;
     }
+    _playerName = name;
+    _matIndex = matIndex;
+}
     
     public override void Render()
     {
-        // Update name,,still fixing this but no materials found
         if (_name != null)
         {
             _name.text = _playerName.ToString();
         } else Debug.LogError("Name is null");
         // Update material
-        if (_matIndex == _lastMaterialIndex && materials != null && _matIndex >= materials.Length)
+        if (_matIndex != _lastMaterialIndex && materials != null && _matIndex < materials.Length)
         {
             Debug.Log("MaterialsHere");
             _playerRenderer.material = materials[_matIndex];
