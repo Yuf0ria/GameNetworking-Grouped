@@ -14,7 +14,7 @@ namespace Network_Scripts
         [SerializeField] private GameMode gameMode = GameMode.Shared; // Changed to Shared explicitly
         [SerializeField] private string sessionName = "TestRoom";
 
-        public NetworkRunner Runner { get; set; }
+        public NetworkRunner Runner { get; set; } //don't set this private it's used in player manager
         public bool IsSessionReady { get; private set; }
     
         public System.Action OnSessionStarted;
@@ -88,8 +88,7 @@ namespace Network_Scripts
                     Input.GetAxis("Mouse Y")
                 );
                 inputData.isSprinting = Input.GetKey(KeyCode.LeftShift);
-                inputData.isJumping = Input.GetKeyDown(KeyCode.Space);
-                // Send input to network
+                inputData.isJumping = Input.GetKey(KeyCode.Space);                // Send input to network
                 input.Set(inputData);
             #endregion
             // Debug to verify input is being collected , uncomment if something's wrong

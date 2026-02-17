@@ -22,9 +22,9 @@ public class PlayerMovement : NetworkBehaviour
             I think I called these variables in other scripts as well - dani, 19:21 | Feb 17
          </summary>
          */
-        [Networked] public Vector3 n_PlayerPos { get; set; }
-        [Networked] public Quaternion n_PlayerRotate { get; set; }
-        [Networked] private float _xrotation { get; set; }
+        [Networked] public Vector3 NPlayerPos { get; set; }
+        [Networked] public Quaternion NPlayerRotate { get; set; }
+        [Networked] private float Xrotation { get; set; }
     #endregion
 
     public override void Spawned()
@@ -73,9 +73,9 @@ public class PlayerMovement : NetworkBehaviour
             RotatePlayer(input);
             RotateCamera(input);
 
-            n_PlayerPos = transform.position;
-            n_PlayerRotate = transform.rotation;
-            _xrotation = playerCamera.localEulerAngles.x;
+            NPlayerPos = transform.position;
+            NPlayerRotate = transform.rotation;
+            Xrotation = playerCamera.localEulerAngles.x;
         }
         else
         {
@@ -93,13 +93,13 @@ public class PlayerMovement : NetworkBehaviour
         // Smoothly move remote players to their networked position
         transform.position = Vector3.Lerp(
             transform.position,
-            n_PlayerPos,
+            NPlayerPos,
             Time.deltaTime * 15f
         );
 
         transform.rotation = Quaternion.Lerp(
             transform.rotation,
-            n_PlayerRotate,
+            NPlayerRotate,
             Time.deltaTime * 15f
         );
 
@@ -108,7 +108,7 @@ public class PlayerMovement : NetworkBehaviour
         {
             playerCamera.localRotation = Quaternion.Lerp(
                 playerCamera.localRotation,
-                Quaternion.Euler(_xrotation, 0f, 0f),
+                Quaternion.Euler(Xrotation, 0f, 0f),
                 Time.deltaTime * 15f
             );
         }
