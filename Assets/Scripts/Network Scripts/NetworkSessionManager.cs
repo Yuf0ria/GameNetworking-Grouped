@@ -88,7 +88,10 @@ namespace Network_Scripts
                     Input.GetAxis("Mouse Y")
                 );
                 inputData.isSprinting = Input.GetKey(KeyCode.LeftShift);
-                inputData.isJumping = Input.GetKey(KeyCode.Space);                // Send input to network
+                inputData.isJumping = Input.GetKey(KeyCode.Space);
+                inputData.interact = Input.GetKeyDown(KeyCode.E); // ← ADDED THIS LINE
+                
+                // Send input to network
                 input.Set(inputData);
             #endregion
             // Debug to verify input is being collected , uncomment if something's wrong

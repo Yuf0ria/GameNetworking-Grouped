@@ -9,5 +9,6 @@ namespace Network_Scripts
         public Vector2 mouseInput;
         public NetworkBool isSprinting;
         public NetworkBool isJumping;
+        public NetworkBool interact;
     }
 }
