@@ -6,9 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="e7f7cb94-ad5b-498f-a72f-44f094246cc9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GameNetworking-Grouped/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GameNetworking-Grouped/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/DragAndDrop.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/DragAndDrop.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Network Scripts/NetworkSessionManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Network Scripts/NetworkSessionManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/PlayerMovement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/PlayerMovement.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,7 +97,7 @@
       <workItem from="1771483948021" duration="3873000" />
       <workItem from="1771488111099" duration="102000" />
       <workItem from="1771646858493" duration="41000" />
-      <workItem from="1771646916094" duration="674000" />
+      <workItem from="1771646916094" duration="847000" />
     </task>
     <servers />
   </component>
