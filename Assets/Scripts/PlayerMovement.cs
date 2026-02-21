@@ -79,7 +79,7 @@ public class PlayerMovement : NetworkBehaviour
         }
         else
         {
-            Debug.LogWarning("GetInput returned false"); // this firing every tick = the real problem
+            Debug.LogWarning("GetInput returned false");
         }
 
         IsGrounded();
@@ -87,10 +87,8 @@ public class PlayerMovement : NetworkBehaviour
 
     private void Update()
     {
-        // Only interpolate remote players
         if (HasInputAuthority) return;
 
-        // Smoothly move remote players to their networked position
         transform.position = Vector3.Lerp(
             transform.position,
             NPlayerPos,
@@ -103,7 +101,6 @@ public class PlayerMovement : NetworkBehaviour
             Time.deltaTime * 15f
         );
 
-        // Sync camera rotation for remote players
         if (playerCamera != null)
         {
             playerCamera.localRotation = Quaternion.Lerp(

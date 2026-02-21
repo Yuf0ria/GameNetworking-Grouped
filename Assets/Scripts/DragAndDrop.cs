@@ -2,7 +2,6 @@
  * Fusion 2 compatible with proper network synchronization
  * --fixed position syncing for remote players --dani
  */
-
 using UnityEngine;
 using Fusion;
 using Network_Scripts;

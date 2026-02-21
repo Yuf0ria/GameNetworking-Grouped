@@ -89,7 +89,7 @@ namespace Network_Scripts
                 );
                 inputData.isSprinting = Input.GetKey(KeyCode.LeftShift);
                 inputData.isJumping = Input.GetKey(KeyCode.Space);
-                inputData.interact = Input.GetKeyDown(KeyCode.E); // ← ADDED THIS LINE
+                inputData.interact = Input.GetKeyDown(KeyCode.E); 
                 
                 // Send input to network
                 input.Set(inputData);
