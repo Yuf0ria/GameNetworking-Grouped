@@ -1,5 +1,6 @@
 using Fusion;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Network_Scripts
 {
@@ -10,5 +11,10 @@ namespace Network_Scripts
         public NetworkBool isSprinting;
         public NetworkBool isJumping;
         public NetworkBool interact;
+        
+        public NetworkBool leftArmRaise;
+        public NetworkBool rightArmRaise;
+        public NetworkBool leftGrab;
+        public NetworkBool rightGrab;
     }
 }

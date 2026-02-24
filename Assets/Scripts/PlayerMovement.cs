@@ -8,7 +8,7 @@ public class PlayerMovement : NetworkBehaviour
     private float _speed = 3; 
     //DO NOT CHANGE
     private Vector3 _velocity;
-    private const float Sensitivity = 1;
+    private const float Sensitivity = 10;
     private const float Gravity = 9.81f;
     private const float JumpForce = 5f;
 
