@@ -500,6 +500,8 @@ GameObject:
   m_Component:
   - component: {fileID: 253798995}
   - component: {fileID: 253798996}
+  - component: {fileID: 253798997}
+  - component: {fileID: 253798998}
   m_Layer: 0
   m_Name: ==Player Manager==
   m_TagString: Untagged
@@ -536,7 +538,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerTeamSpawnManager
   panel: {fileID: 562930778}
   button: {fileID: 648727932}
-  playerPrefab: {fileID: 5253655008755870526, guid: 7d8c31463e01d84179a00a1a71a19e90, type: 3}
   spawnAreaCenter: {x: 0, y: 1, z: 0}
   spawnRadius: 5
   spawnHeight: 1
@@ -547,6 +548,38 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 82055c944b12dbb2ca44a2be77464721, type: 2}
   - {fileID: 2100000, guid: 0d6319d9a1ce2345ba1444d06e884b37, type: 2}
   - {fileID: 2100000, guid: 86df33767efaa2e159c49ea5f8aeef8e, type: 2}
+--- !u!114 &253798997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 253798994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98d03a52b99261962a536d45cc3c97f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpawnRequestHandler
+  playerPrefab: {fileID: 5253655008755870526, guid: 7d8c31463e01d84179a00a1a71a19e90, type: 3}
+--- !u!114 &253798998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 253798994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 3700129975
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 253798997}
+  ForceRemoteRenderTimeframe: 0
 --- !u!1 &329973028
 GameObject:
   m_ObjectHideFlags: 0
@@ -591,7 +624,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2756ce1cc26b15f419eba29d0ae34c69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Network_Scripts.NetworkSessionManager
-  gameMode: 2
+  gameMode: 6
   sessionName: TestRoom
 --- !u!1 &389672623
 GameObject:

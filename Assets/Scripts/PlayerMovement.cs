@@ -1,11 +1,11 @@
 using UnityEngine;
 using Fusion;
-using Network_Scripts; //This is where the network input data is located, in the editor > assets > scritps > network
+using Network_Scripts; //This is where the network input data is located, in the editor > assets > scripts > network
 
 public class PlayerMovement : NetworkBehaviour
 {
     //Changeable
-    private float _speed = 3; 
+    private float _speed = 3;
     //DO NOT CHANGE
     private Vector3 _velocity;
     private const float Sensitivity = 10;
@@ -34,7 +34,7 @@ public class PlayerMovement : NetworkBehaviour
             //when the player controls the camera, the cursor is not active
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
-            
+
             /* This checks for the player's camera, the camera should only follow the local player, but since
              * but we're only using ONE player prefab so if the remote player's camera is also in the world this makes
              * sure their camera and audio listener is turned off. --dani
@@ -59,7 +59,7 @@ public class PlayerMovement : NetworkBehaviour
                 if (listener != null) listener.enabled = false;
             }
 
-            Debug.Log($"another player has spawned: {Object.InputAuthority}");
+            Debug.Log($"Another player has spawned: {Object.InputAuthority}");
         }
     }
 
@@ -79,7 +79,11 @@ public class PlayerMovement : NetworkBehaviour
         }
         else
         {
-            Debug.LogWarning("GetInput returned false"); // this firing every tick = the real problem
+            // Changed: In Host-Client, the host simulates ALL players.
+            // GetInput returns false for remote players when no input arrived this tick — that's normal.
+            // Only warn if THIS peer is supposed to be providing input (i.e. local player).
+            if (HasInputAuthority)
+                Debug.LogWarning($"[PlayerMovement] GetInput returned false for local player {Object.InputAuthority}");
         }
 
         IsGrounded();

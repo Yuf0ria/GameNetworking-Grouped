@@ -1,9 +1,15 @@
+/*
+ * Incase there are any errors with this script, you can message me, I'm leaving most of my debugs here
+ * --dani, (m/d/y | 3/5/2026)
+ */
+
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Fusion;
 using Fusion.Sockets;
 using UnityEngine;
+using ParrelSync;
 
 namespace Network_Scripts
 {
@@ -11,7 +17,7 @@ namespace Network_Scripts
     {
         public static NetworkSessionManager Instance { get; private set; }
     
-        [SerializeField] private GameMode gameMode = GameMode.Shared; // Changed to Shared explicitly
+        [SerializeField] private GameMode gameMode = GameMode.AutoHostOrClient;
         [SerializeField] private string sessionName = "TestRoom";
 
         public NetworkRunner Runner { get; set; } //don't set this private it's used in player manager
@@ -39,6 +45,10 @@ namespace Network_Scripts
 
         private void Start()
         {
+            //Checks if the player is a clone of the server | using parrelsync
+            #if UNITY_EDITOR
+                gameMode = ClonesManager.IsClone() ? GameMode.Client : GameMode.Host;
+            #endif
             StartCoroutine(StartSession());
         }
 
@@ -64,6 +74,8 @@ namespace Network_Scripts
             if (result.Ok)
             {
                 IsSessionReady = true;
+                //debug to check role, comment out or delete if no issues
+                Debug.Log($"Session started as: {(Runner.IsServer ? "HOST" : "CLIENT")}");
                 OnSessionStarted?.Invoke();
             }
             else
@@ -89,13 +101,11 @@ namespace Network_Scripts
                 );
                 inputData.isSprinting = Input.GetKey(KeyCode.LeftShift);
                 inputData.isJumping = Input.GetKey(KeyCode.Space);
-                inputData.interact = Input.GetKeyDown(KeyCode.E); // ← ADDED THIS LINE
+                inputData.interact = Input.GetKeyDown(KeyCode.E);
                 
                 // Send input to network
                 input.Set(inputData);
             #endregion
-            // Debug to verify input is being collected , uncomment if something's wrong
-            // Debug.Log($"Input collected: Move={inputData.movementInput}, Mouse={inputData.mouseInput}");
         }
     
         public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) 
@@ -103,6 +113,7 @@ namespace Network_Scripts
             Debug.Log($"   PLAYER JOINED!");
             Debug.Log($"   Player ID: {player.PlayerId}");
             Debug.Log($"   Is Local Player: {player == runner.LocalPlayer}");
+            Debug.Log($"   Running as: {(runner.IsServer ? "HOST" : "CLIENT")}");
             Debug.Log($"   Total Players: {runner.ActivePlayers.Count()}");
             
             // List all players in session

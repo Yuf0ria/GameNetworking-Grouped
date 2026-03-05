@@ -29,9 +29,6 @@ public class PlayerTeamSpawnManager : MonoBehaviour
     [Header("Components for the Canvas")]
     [SerializeField] private GameObject panel;
     [SerializeField] private Button button;
-    //player
-    [Header("For Instantiation & Network call")]
-    [SerializeField] private NetworkObject playerPrefab;
     //Spawning not on the same spot
     [Header("Spawn Area")]
     [SerializeField] private Vector3 spawnAreaCenter = new Vector3(0, 1, 0);
@@ -74,6 +71,9 @@ public class PlayerTeamSpawnManager : MonoBehaviour
                     SessionOK();
                 else NetworkSessionManager.Instance.OnSessionStarted += SessionOK;
             }
+            
+            if (SpawnRequestHandler.Instance != null)
+                SpawnRequestHandler.Instance.OnHandlerReady += SessionOK;
             else Debug.LogError("NetworkSessionManager.cs not found"); //Don't delete this script 💀
         #endregion
     }
@@ -121,16 +121,19 @@ public class PlayerTeamSpawnManager : MonoBehaviour
         #region NULLCHECKS (SPAWNING)
             if (hasSpawned)
             {
-                Debug.LogWarning("Local player spawned");
+                Debug.LogWarning("Local player already spawned");
                 return;
             }
+
             string playerName = playerNameInputField != null ? playerNameInputField.text.Trim() : string.Empty;
             if (string.IsNullOrEmpty(playerName))
             {
                 Debug.LogWarning("name is null. name = 'player'");
                 playerName = "Player";
             }
+
             int selectedMatIndex = materialDropdown != null ? materialDropdown.value : 0;
+
             if (NetworkSessionManager.Instance == null)
             {
                 Debug.LogError("SESSION IS NULL!!");
@@ -150,50 +153,30 @@ public class PlayerTeamSpawnManager : MonoBehaviour
                 return;
             }
 
-            if (playerPrefab == null)
+            // Changed: SpawnRequestHandler handles the prefab now
+            if (SpawnRequestHandler.Instance == null || !SpawnRequestHandler.Instance.IsReady)
             {
-                Debug.LogError("no prefab");
+                Debug.LogError("SpawnRequestHandler not ready yet! Is it a NetworkObject in the scene?");
                 return;
             }
         #endregion
-        
+
         try
         {
-            NetworkObject player = runner.Spawn(
-                playerPrefab,
-                spawnPosition,
-                Quaternion.identity,
-                runner.LocalPlayer
-            );
+            // Changed: Instead of runner.Spawn() (which only works on host),
+            // we send an RPC to SpawnRequestHandler — the Host receives it and spawns.
+            // This works for BOTH the host and clients transparently.
+            SpawnRequestHandler.Instance.RPC_RequestSpawn(playerName, selectedMatIndex, spawnPosition);
 
-            #region NULLCHECKS (PLAYER)
-                if (player == null)
-                {
-                    Debug.LogError("NO SPAWN?!?!");
-                    return;
-                }
-            #endregion
-            
-            //CUSTOMIZATION SETUP -- PLAYER CUSTOMIZATION SCRIPT
-            PlayerCustomization customization = player.GetComponent<PlayerCustomization>();
-            if (customization != null)
-            {
-                customization.InsPlayerInfo(playerName, selectedMatIndex);
-                Debug.Log($"Customization applied: Name='{playerName}', MatIndex={selectedMatIndex}");
-            }
-            else
-            {
-                Debug.LogWarning("Spawned player has no PlayerCustomization component – skipping customization.");
-            }
-            
-            //SWITCH
+            // Close the UI immediately — the spawn happens async on the host
             hasSpawned = true;
             panel.SetActive(false);
+
+            Debug.Log($"[PlayerTeamSpawnManager] Spawn request sent — Name='{playerName}', Mat={selectedMatIndex}");
         }
         catch (System.Exception e)
         {
-            //Error if there is a prob
-            Debug.LogError($"Spawn error: {e.Message}");
+            Debug.LogError($"Spawn request error: {e.Message}");
             Debug.LogError($"Stack trace: {e.StackTrace}");
         }
     }
