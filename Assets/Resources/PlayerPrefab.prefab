@@ -935,6 +935,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::playerGrabbing
   leftArm: {fileID: 5264143021443152571}
   rightArm: {fileID: 6178923337015174610}
+  leftArmTransform: {fileID: 6350019550475495859}
+  rightArmTransform: {fileID: 813752557222383828}
+  _leftHandFull: {fileID: 9152953899325146516}
+  _rightHandFull: {fileID: 8127947976436542594}
+  grabRange: 2
+  GrabLayerMask:
+    serializedVersion: 2
+    m_Bits: 192
 --- !u!1 &8127947976436542594
 GameObject:
   m_ObjectHideFlags: 0
