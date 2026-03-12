@@ -29,6 +29,12 @@ public class PlayerMovement : NetworkBehaviour
 
     public override void Spawned()
     {
+        // FIX: Initialize networked transform immediately on spawn.
+        // Without this, remote players read NPlayerRotate as a zero quaternion
+        // before the first FixedUpdateNetwork tick, causing Quaternion.Lerp to assert.
+        NPlayerPos = transform.position;
+        NPlayerRotate = transform.rotation;
+
         if (HasInputAuthority)
         {
             //when the player controls the camera, the cursor is not active
@@ -79,7 +85,7 @@ public class PlayerMovement : NetworkBehaviour
         }
         else
         {
-            // Changed: In Host-Client, the host simulates ALL players.
+            // In Host-Client, the host simulates ALL players.
             // GetInput returns false for remote players when no input arrived this tick — that's normal.
             // Only warn if THIS peer is supposed to be providing input (i.e. local player).
             if (HasInputAuthority)
@@ -101,11 +107,16 @@ public class PlayerMovement : NetworkBehaviour
             Time.deltaTime * 15f
         );
 
-        transform.rotation = Quaternion.Lerp(
-            transform.rotation,
-            NPlayerRotate,
-            Time.deltaTime * 15f
-        );
+        // FIX: Guard against zero quaternion before Lerp — can happen briefly before
+        // the first FixedUpdateNetwork tick sets NPlayerRotate on a remote player.
+        if (NPlayerRotate != default)
+        {
+            transform.rotation = Quaternion.Lerp(
+                transform.rotation,
+                NPlayerRotate,
+                Time.deltaTime * 15f
+            );
+        }
 
         // Sync camera rotation for remote players
         if (playerCamera != null)

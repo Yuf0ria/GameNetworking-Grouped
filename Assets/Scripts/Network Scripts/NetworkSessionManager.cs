@@ -1,11 +1,5 @@
-/*
- * Incase there are any errors with this script, you can message me, I'm leaving most of my debugs here
- * --dani, (m/d/y | 3/5/2026)
- */
-
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+using System.Collections.Generic; 
 using Fusion;
 using Fusion.Sockets;
 using UnityEngine;
@@ -51,6 +45,12 @@ namespace Network_Scripts
             #endif
             StartCoroutine(StartSession());
         }
+        
+        /// <summary>
+        /// StartSession():
+        /// - Just like the name, it gets the network runner and starts the session
+        /// - the starttask call is the most important, but the checks are there to prevent bool repetitions
+        /// </summary>
 
         private IEnumerator StartSession()
         {
@@ -83,11 +83,22 @@ namespace Network_Scripts
                 Debug.LogError($"Failed to start session: {result.ShutdownReason}");
             }
         }
+        
+        /// <summary>
+        /// Connected to the NetworkInputData Script:
+        /// - Sends the Input data from here to there so that the other players can see it as well
+        /// - you don't need to use this for RPCs
+        /// - do not comment anything that has no Debug.Log
+        /// - ESPECIALLY NULL CHECKS DON'T COMMENT IT OUT
+        /// --dani, March 6
+        /// </summary>
+        /// <param name="runner"></param>
+        /// <param name="input"></param>
     
         public void OnInput(NetworkRunner runner, NetworkInput input)
         {
             if (!runner.IsRunning) return;
-            // collect input data
+            // collects input data
             #region input CTRLs
                 NetworkInputData inputData = new NetworkInputData();
                 inputData.movementInput = new Vector3(
@@ -110,17 +121,18 @@ namespace Network_Scripts
     
         public void OnPlayerJoined(NetworkRunner runner, PlayerRef player) 
         {
-            Debug.Log($"   PLAYER JOINED!");
-            Debug.Log($"   Player ID: {player.PlayerId}");
-            Debug.Log($"   Is Local Player: {player == runner.LocalPlayer}");
-            Debug.Log($"   Running as: {(runner.IsServer ? "HOST" : "CLIENT")}");
-            Debug.Log($"   Total Players: {runner.ActivePlayers.Count()}");
-            
-            // List all players in session
-            foreach (var p in runner.ActivePlayers)
-            {
-                Debug.Log($"- Player {p.PlayerId} {(p == runner.LocalPlayer ? "(LOCAL)" : "(REMOTE)")}");
-            }
+            //Commented for now, will delete once everything is finalized.
+            // Debug.Log($"   PLAYER JOINED!");
+            // Debug.Log($"   Player ID: {player.PlayerId}");
+            // Debug.Log($"   Is Local Player: {player == runner.LocalPlayer}");
+            // Debug.Log($"   Running as: {(runner.IsServer ? "HOST" : "CLIENT")}");
+            // Debug.Log($"   Total Players: {runner.ActivePlayers.Count()}");
+            //
+            // // List all players in session
+            // foreach (var p in runner.ActivePlayers)
+            // {
+            //     Debug.Log($"- Player {p.PlayerId} {(p == runner.LocalPlayer ? "(LOCAL)" : "(REMOTE)")}");
+            // }
         }
 
         #region Debug Network Functions
