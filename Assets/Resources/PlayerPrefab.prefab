@@ -937,9 +937,7 @@ MonoBehaviour:
   rightArm: {fileID: 6178923337015174610}
   leftArmTransform: {fileID: 6350019550475495859}
   rightArmTransform: {fileID: 813752557222383828}
-  _leftHandFull: {fileID: 9152953899325146516}
-  _rightHandFull: {fileID: 8127947976436542594}
-  grabRange: 2
+  grabRange: 3
   GrabLayerMask:
     serializedVersion: 2
     m_Bits: 192

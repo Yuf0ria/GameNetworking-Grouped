@@ -17,11 +17,6 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] private CharacterController controller;
 
     #region Network Properties
-        /* <summary>
-            this sets up the local positions to the fusion 2 network, do not change the public variable to private,
-            I think I called these variables in other scripts as well - dani, 19:21 | Feb 17
-         </summary>
-         */
         [Networked] public Vector3 NPlayerPos { get; set; }
         [Networked] public Quaternion NPlayerRotate { get; set; }
         [Networked] private float Xrotation { get; set; }
@@ -29,15 +24,11 @@ public class PlayerMovement : NetworkBehaviour
 
     public override void Spawned()
     {
-        // FIX: Initialize networked transform immediately on spawn.
-        // Without this, remote players read NPlayerRotate as a zero quaternion
-        // before the first FixedUpdateNetwork tick, causing Quaternion.Lerp to assert.
         NPlayerPos = transform.position;
         NPlayerRotate = transform.rotation;
 
         if (HasInputAuthority)
         {
-            //when the player controls the camera, the cursor is not active
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 
@@ -85,9 +76,6 @@ public class PlayerMovement : NetworkBehaviour
         }
         else
         {
-            // In Host-Client, the host simulates ALL players.
-            // GetInput returns false for remote players when no input arrived this tick — that's normal.
-            // Only warn if THIS peer is supposed to be providing input (i.e. local player).
             if (HasInputAuthority)
                 Debug.LogWarning($"[PlayerMovement] GetInput returned false for local player {Object.InputAuthority}");
         }
@@ -106,9 +94,7 @@ public class PlayerMovement : NetworkBehaviour
             NPlayerPos,
             Time.deltaTime * 15f
         );
-
-        // FIX: Guard against zero quaternion before Lerp — can happen briefly before
-        // the first FixedUpdateNetwork tick sets NPlayerRotate on a remote player.
+        
         if (NPlayerRotate != default)
         {
             transform.rotation = Quaternion.Lerp(

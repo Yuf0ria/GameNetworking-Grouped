@@ -7,8 +7,10 @@
     <list default="true" id="e7f7cb94-ad5b-498f-a72f-44f094246cc9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.GameNetworking-Grouped/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.GameNetworking-Grouped/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Resources/PlayerPrefab.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/PlayerPrefab.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/MainScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/MainScene.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Network Scripts/NetworkInputData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Network Scripts/NetworkInputData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/PlayerMovement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/PlayerMovement.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/playerGrabbing.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/playerGrabbing.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/playerTeamSpawnManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/playerTeamSpawnManager.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,7 +103,7 @@
       <workItem from="1771488111099" duration="102000" />
       <workItem from="1772717931998" duration="5324000" />
       <workItem from="1772783622646" duration="5976000" />
-      <workItem from="1773299220453" duration="6189000" />
+      <workItem from="1773299220453" duration="7776000" />
     </task>
     <servers />
   </component>

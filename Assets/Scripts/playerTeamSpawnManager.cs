@@ -5,21 +5,12 @@
  * - Get their prefab using Network Object
  * - Check if the Session works before the player is spawned
  *
- * (Imported from an previous Network Project)
- * if you have any questions leave a comment or ping me on discord
- * --dani
  */
 //Built-in namespaces
 using Fusion;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-/*
- * this the NetworkInputData Script, I namespaced it as another way to call a scripts that in a folder
- * this also allows it to be easily found, unlike getting an error that it's not found.
- * ("=_=)
- * --dani
- */
 //Custom namespace
 using Network_Scripts;
 
@@ -44,10 +35,6 @@ public class PlayerTeamSpawnManager : MonoBehaviour
 
     private void Start()
     {
-        /* most of the statements here are null checks, DON'T COMMENT IT OUT.
-         * 
-         * -- dani, Feb 17
-         */
         //IMPORTANT NULL CHECKS
         #region Null Checks
             if (button != null)
@@ -149,11 +136,10 @@ public class PlayerTeamSpawnManager : MonoBehaviour
 
             if (!runner.IsRunning)
             {
-                Debug.LogError($"AYAW TUMAKBO, BAKIT ALL FALSE State: IsServer={runner.IsServer}, IsClient={runner.IsClient}");
+                Debug.LogError($"State: IsServer={runner.IsServer}, IsClient={runner.IsClient}");
                 return;
             }
 
-            // Changed: SpawnRequestHandler handles the prefab now
             if (SpawnRequestHandler.Instance == null || !SpawnRequestHandler.Instance.IsReady)
             {
                 Debug.LogError("SpawnRequestHandler not ready yet! Is it a NetworkObject in the scene?");
@@ -163,9 +149,6 @@ public class PlayerTeamSpawnManager : MonoBehaviour
 
         try
         {
-            // Changed: Instead of runner.Spawn() (which only works on host),
-            // we send an RPC to SpawnRequestHandler — the Host receives it and spawns.
-            // This works for BOTH the host and clients transparently.
             SpawnRequestHandler.Instance.RPC_RequestSpawn(playerName, selectedMatIndex, spawnPosition);
 
             // Close the UI immediately — the spawn happens async on the host

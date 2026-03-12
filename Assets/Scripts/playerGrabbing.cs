@@ -2,10 +2,6 @@ using Fusion;
 using Network_Scripts;
 using UnityEngine;
 
-/// <summary>
-/// What I added:
-/// - if left arm has an item, E - interact should be grabbed by the right
-/// </summary>
 public class playerGrabbing : NetworkBehaviour
 {
     [Header("Player Arms")] 
@@ -16,14 +12,17 @@ public class playerGrabbing : NetworkBehaviour
     [SerializeField] private Transform leftArmTransform;
     [SerializeField] private Transform rightArmTransform;
 
-    [Header("Hand Slots")] 
-    [SerializeField] private GameObject _leftHandFull;
-    [SerializeField] private GameObject _rightHandFull;
+    //Not for Serialization
+    private GameObject _leftHandFull;
+    private GameObject _rightHandFull;
+    
     [Header("Grab Settings")]
     [SerializeField] private float grabRange = 2f;
     [SerializeField] private LayerMask GrabLayerMask;
-    private NetworkBool isLeftHandGrabbing { get; set; }
-    private NetworkBool isRightHandGrabbing { get; set; }
+    
+    //network bools
+    [Networked] private NetworkBool isLeftHandGrabbing { get; set; }
+    [Networked] private NetworkBool isRightHandGrabbing { get; set; }
 
     private void Start()
     {
@@ -33,14 +32,21 @@ public class playerGrabbing : NetworkBehaviour
 
     public override void FixedUpdateNetwork()
     {
+        //arm appears when E is pressed
         leftArm.SetActive(isLeftHandGrabbing);
         rightArm.SetActive(isRightHandGrabbing);
 
+        if (!HasInputAuthority) return;
+        //gets E Key from Network_Scripts
         if (GetInput(out NetworkInputData input))
         {
             if (input.interact)
             {
-                PickupObjsCollider();
+                //if both arms are occupied, Pressing E will drop it
+                if (isLeftHandGrabbing && isRightHandGrabbing)
+                    RPC_RequestDrop();
+                else 
+                    PickupObjsCollider();
             }
         }
     }
@@ -50,7 +56,7 @@ public class playerGrabbing : NetworkBehaviour
         Collider[] hits = Physics.OverlapSphere(transform.position, grabRange, GrabLayerMask);
         if (hits.Length == 0) return;
 
-        GameObject closestObj = ClosestObj(hits);
+        GameObject closestObj = ClosestObj(hits, _leftHandFull,  _rightHandFull);
         if (closestObj == null) return;
 
         NetworkObject netObj = closestObj.GetComponent<NetworkObject>();
@@ -60,13 +66,15 @@ public class playerGrabbing : NetworkBehaviour
             Debug.LogWarning($"[Grabbing] {closestObj.name} has no NetworkObject — can't grab over network");
     }
 
-    private GameObject ClosestObj(Collider[] hits)
+    private GameObject ClosestObj(Collider[] hits, GameObject excludeL, GameObject excludeR)
     {
         GameObject closestObj = null;
         float minDist = Mathf.Infinity;
 
         foreach (var hit in hits)
         {
+            if(hit.gameObject == excludeL ||  hit.gameObject == excludeR) continue;
+            
             float dist = Vector3.Distance(transform.position, hit.transform.position);
             if (dist < minDist)
             {
@@ -94,14 +102,14 @@ public class playerGrabbing : NetworkBehaviour
         {
             _leftHandFull = obj;
             AttachToSlot(obj, leftArmTransform);
-            isLeftHandGrabbing = true; // ✅ Host sets this — safe
+            isLeftHandGrabbing = true; 
             Debug.Log($"[Grabbing] Left hand picked up: {obj.name}");
         }
         else if (!isRightHandGrabbing)
         {
             _rightHandFull = obj;
             AttachToSlot(obj, rightArmTransform);
-            isRightHandGrabbing = true; // ✅ Host sets this — safe
+            isRightHandGrabbing = true; 
             Debug.Log($"[Grabbing] Right hand picked up: {obj.name}");
         }
         else
@@ -113,11 +121,16 @@ public class playerGrabbing : NetworkBehaviour
     [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     private void RPC_RequestDrop()
     {
-        DropSingleObject(ref _leftHandFull);
-        isLeftHandGrabbing = false; // ✅ Host sets this — safe
-
-        DropSingleObject(ref _rightHandFull);
-        isRightHandGrabbing = false; // ✅ Host sets this — safe
+        if (isLeftHandGrabbing)
+        {
+            DropSingleObject(ref _leftHandFull);
+            isLeftHandGrabbing = false;
+        }
+        if (isRightHandGrabbing)
+        {
+            DropSingleObject(ref _rightHandFull);
+            isRightHandGrabbing = false;
+        }
     }
 
     private void AttachToSlot(GameObject obj, Transform slot)
