@@ -21,8 +21,8 @@ public class playerGrabbing : NetworkBehaviour
     [SerializeField] private LayerMask GrabLayerMask;
     
     //network bools
-    [Networked] private NetworkBool isLeftHandGrabbing { get; set; }
-    [Networked] private NetworkBool isRightHandGrabbing { get; set; }
+    [Networked] public NetworkBool isLeftHandGrabbing { get; set; }
+    [Networked] public NetworkBool isRightHandGrabbing { get; set; }
 
     private void Start()
     {
