@@ -37,17 +37,14 @@ public class playerGrabbing : NetworkBehaviour
         rightArm.SetActive(isRightHandGrabbing);
 
         if (!HasInputAuthority) return;
-        //gets E Key from Network_Scripts
+        
         if (GetInput(out NetworkInputData input))
         {
             if (input.interact)
-            {
-                //if both arms are occupied, Pressing E will drop it
-                if (isLeftHandGrabbing && isRightHandGrabbing)
-                    RPC_RequestDrop();
-                else 
-                    PickupObjsCollider();
-            }
+                PickupObjsCollider(); // E = always grab
+
+            if (input.drop && (isLeftHandGrabbing || isRightHandGrabbing))
+                RPC_RequestDrop();    // F = always drop
         }
     }
 

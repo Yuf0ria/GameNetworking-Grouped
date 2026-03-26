@@ -45,12 +45,6 @@ namespace Network_Scripts
             #endif
             StartCoroutine(StartSession());
         }
-        
-        /// <summary>
-        /// StartSession():
-        /// - Just like the name, it gets the network runner and starts the session
-        /// - the starttask call is the most important, but the checks are there to prevent bool repetitions
-        /// </summary>
 
         private IEnumerator StartSession()
         {
@@ -83,17 +77,6 @@ namespace Network_Scripts
                 Debug.LogError($"Failed to start session: {result.ShutdownReason}");
             }
         }
-        
-        /// <summary>
-        /// Connected to the NetworkInputData Script:
-        /// - Sends the Input data from here to there so that the other players can see it as well
-        /// - you don't need to use this for RPCs
-        /// - do not comment anything that has no Debug.Log
-        /// - ESPECIALLY NULL CHECKS DON'T COMMENT IT OUT
-        /// --dani, March 6
-        /// </summary>
-        /// <param name="runner"></param>
-        /// <param name="input"></param>
     
         public void OnInput(NetworkRunner runner, NetworkInput input)
         {
@@ -113,6 +96,7 @@ namespace Network_Scripts
                 inputData.isSprinting = Input.GetKey(KeyCode.LeftShift);
                 inputData.isJumping = Input.GetKey(KeyCode.Space);
                 inputData.interact = Input.GetKeyDown(KeyCode.E);
+                inputData.drop = Input.GetKeyDown(KeyCode.F);
                 
                 // Send input to network
                 input.Set(inputData);

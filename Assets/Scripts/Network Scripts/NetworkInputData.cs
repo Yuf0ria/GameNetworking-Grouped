@@ -11,5 +11,6 @@ namespace Network_Scripts
         public NetworkBool isSprinting; //Runs
         public NetworkBool isJumping; //Jumps
         public NetworkBool interact; //E to interact
+        public NetworkBool drop;
     }
 }
