@@ -60,6 +60,7 @@ public class SpawnRequestHandler : NetworkBehaviour
         if (customization != null)
         {
             customization.InsPlayerInfo(playerName, matIndex);
+            GameTimerManager.Instance.RegisterPlayerSpawn();
             Debug.Log($"Player Here: {info.Source.PlayerId} — Name='{playerName}', Mat={matIndex}");
         }
         else

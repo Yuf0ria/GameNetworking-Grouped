@@ -18,7 +18,7 @@ public class PlayerTeamSpawnManager : MonoBehaviour
 {
     //canvas
     [Header("Components for the Canvas")]
-    [SerializeField] private GameObject panel;
+    [SerializeField] private GameObject RegisterPanel, InGamePanel;
     [SerializeField] private Button button;
     //Spawning not on the same spot
     [Header("Spawn Area")]
@@ -35,6 +35,7 @@ public class PlayerTeamSpawnManager : MonoBehaviour
 
     private void Start()
     {
+        InGamePanel.SetActive(false);
         //IMPORTANT NULL CHECKS
         #region Null Checks
             if (button != null)
@@ -153,7 +154,8 @@ public class PlayerTeamSpawnManager : MonoBehaviour
 
             // Close the UI immediately — the spawn happens async on the host
             hasSpawned = true;
-            panel.SetActive(false);
+            RegisterPanel.SetActive(false);
+            InGamePanel.SetActive(true);
 
             Debug.Log($"[PlayerTeamSpawnManager] Spawn request sent — Name='{playerName}', Mat={selectedMatIndex}");
         }
